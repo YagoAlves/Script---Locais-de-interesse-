@@ -37,27 +37,28 @@
         var service = new google.maps.places.PlacesService(map);
         service.nearbySearch({
           location: pyrmont,
-          radius: 500,
-          type: ['store']
+          radius: 500000,
+          type: ['restaurant']
         }, callback);
       }
 
       function callback(results, status) {
+        
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           var myJsonString = JSON.stringify(results);
-          /*var txtFile = "/test.txt";
-          var file = new File(txtFile,"write");
-          var str = JSON.stringify(results);
-          log("opening file...");
-          file.open(); 
-          log("writing file..");
-          file.writeline(str);
-          file.close();*/
-          console.log(myJsonString);
+          var txtFile = "tmp/test.txt";
+          var file = new Blob([myJsonString], {type: 'application/json'});
+          var fileURL = URL.createObjectURL(file);
+          var a = document.createElement('a');
+          a.download    = "backup.json";
+          a.href        = fileURL;
+          document.body.appendChild(a);
+          a.click();
+          //console.log(myJsonString);
           for (var i = 0; i < results.length; i++) {
             createMarker(results[i]);
           }
-        }
+        }   
       }
 
       function createMarker(place) {
